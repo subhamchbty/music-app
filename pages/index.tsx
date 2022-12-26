@@ -1,7 +1,6 @@
-import Head from "next/head";
-import { Play } from "phosphor-react";
 import React from "react";
-import AudioPlayer from "../src/components/AudioPlayer";
+import AudioControls from "../lib/audio-controls";
+import { AudioControlProvider } from "../lib/audio-controls/context/AudioControlContext";
 
 const playlist = [
     {
@@ -25,36 +24,34 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="h-screen w-full flex justify-center items-center bg-black">
-            <div className="h-[800px] flex flex-col justify-center bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md p-6">
-                <div className="text-xl font-bold mb-6">Music controls</div>
-
-                {!loading && (
-                    <div className="flex flex-col h-full w-full">
-                        <div className="flex flex-col space-y-1 items-start mb-10">
-                            <p className="text-xs">Playlist</p>
-                            {playlist.map((track, index) => (
-                                <button
-                                    className="text-xs text-left p-2 text-gray-300 bg-black bg-opacity-30 rounded-md w-full flex flex-row space-x-1 items-center"
-                                    onClick={() => setActive(track.url)}
-                                    key={index}
-                                >
-                                    <Play />
+        <div>
+            {!loading && (
+                <div>
+                    <div>
+                        <p>
+                            <strong>Playlist</strong>
+                        </p>
+                        {playlist.map((track, index) => (
+                            <div key={index}>
+                                <button onClick={() => setActive(track.url)}>
                                     <span>{track.title}</span>
                                 </button>
-                            ))}
-                        </div>
-                        <div className="w-full bg-gray-800 rounded-md mt-auto">
-                            <div className="w-full p-4 text-gray-300">
-                                <AudioPlayer
-                                    active={track}
+                                <br />
+                            </div>
+                        ))}
+                    </div>
+                    <div>
+                        <div>
+                            <AudioControlProvider>
+                                <AudioControls
+                                    track={track}
                                     playlist={playlist}
                                 />
-                            </div>
+                            </AudioControlProvider>
                         </div>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 }
